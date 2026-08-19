@@ -1,35 +1,17 @@
-import os
-from pathlib import Path
-
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph.state import CompiledStateGraph
 
 from deepagents import create_deep_agent
-from deepagents.backends import FilesystemBackend
 
+from .backend import build_backend
 from .client import build_model
 from .prompts.prompt import SYSTEM_PROMPT
 from .states import AgentState
-from .subAgent import research_subagent
-from .tools import get_current_time, internet_search
+from .subAgent import image_subagent, research_subagent
+from .tools import get_current_time
 
 TOOLS = [get_current_time,]
-SUBAGENTS = [research_subagent]
-
-# agent 的文件都落在这个目录下。默认是项目根的 agent_files/
-FILES_DIR = Path(os.getenv("AGENT_FILES_DIR", Path(__file__).resolve().parents[2] / "agent_files"))
-
-
-def build_backend() -> FilesystemBackend:
-    """真写磁盘的 backend。
-
-    不传 backend 时 deepagents 用的是 StateBackend —— 文件只存在 state["files"]
-    这个 channel 里，磁盘上找不到，进程退出就没了。
-    virtual_mode=True 把 FILES_DIR 当成虚拟根：模型看到的 /a.md 实际落在
-    FILES_DIR/a.md，它也跳不出这个目录。
-    """
-    FILES_DIR.mkdir(parents=True, exist_ok=True)
-    return FilesystemBackend(root_dir=FILES_DIR, virtual_mode=True)
+SUBAGENTS = [research_subagent, image_subagent]
 
 
 def build_agent(checkpointer: BaseCheckpointSaver | None = None) -> CompiledStateGraph:

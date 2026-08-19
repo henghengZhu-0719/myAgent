@@ -17,4 +17,5 @@ dependencies = [
     "aiosqlite>=0.20",
     "paramiko>=3.5",
     "tavily-python>=0.5",
+    "openai>=2.0",
 ]

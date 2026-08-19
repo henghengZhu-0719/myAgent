@@ -7,11 +7,11 @@ from .backend import build_backend
 from .client import build_model
 from .prompts.prompt import SYSTEM_PROMPT
 from .states import AgentState
-from .subAgent import image_subagent, research_subagent
+from .subAgent import image_subagent, pdf_subagent, research_subagent
 from .tools import get_current_time
 
 TOOLS = [get_current_time,]
-SUBAGENTS = [research_subagent, image_subagent]
+SUBAGENTS = [research_subagent, image_subagent, pdf_subagent]
 
 
 def build_agent(checkpointer: BaseCheckpointSaver | None = None) -> CompiledStateGraph:
